@@ -27,12 +27,12 @@ class Cafepress_Store {
 	const API_URL = 'http://api.cafepress.com/';
 	const API_VERSION = '3';
 
-	public $storename = '';
+	public $name = '';
 	public $appKey = '';
 
-	public function __construct( $appKey, $storename ) {
+	public function __construct( $appKey, $name ) {
 		$this->appKey = $appKey;
-		$this->storeName = $storename;
+		$this->name = $name;
 	}
 
 
