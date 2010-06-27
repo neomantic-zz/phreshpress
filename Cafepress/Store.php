@@ -29,11 +29,12 @@ class Cafepress_Store {
 
 	public $name = '';
 	public $appKey = '';
-	public $user = '';
+	public $user = null;
 
-	public function __construct( $appKey, $name ) {
+	public function __construct( $appKey, $name, $user = null ) {
 		$this->appKey = $appKey;
 		$this->name = $name;
+		$this->user = $user;
 	}
 
 
