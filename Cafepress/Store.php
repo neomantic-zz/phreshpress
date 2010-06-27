@@ -29,6 +29,7 @@ class Cafepress_Store {
 
 	public $name = '';
 	public $appKey = '';
+	public $user = '';
 
 	public function __construct( $appKey, $name ) {
 		$this->appKey = $appKey;
