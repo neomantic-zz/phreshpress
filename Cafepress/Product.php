@@ -30,9 +30,8 @@ class Cafepress_Product {
 
 	protected $__store;
 
-	public function __construct( $merchandiseId, $store, $user ) {
+	public function __construct( $merchandiseId, $store ) {
 		$this->__merchandiseId = $merchandiseId;
-		$this->user = $user;
 		$this->__store = $store;
 		$this->__create();
 	}
@@ -100,7 +99,7 @@ class Cafepress_Product {
 						   Cafepress_Store::API_URL,
 						   Cafepress_Store::API_VERSION,
 						   $this->__store->appKey,
-						   $this->user->getUserToken(),
+						   $this->__store->user->getUserToken(),
 						   urlencode( $this->__domDocument->saveXML() )
 						   );
 
