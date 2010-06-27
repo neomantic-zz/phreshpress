@@ -62,7 +62,7 @@ class Cafepress_Store {
 			return false;
 		}
 
-		return new Cafepress_Product( $this->user, $this->appKey, $merchandiseId, $this->storeName );
+		return new Cafepress_Product( $merchandiseId, $this, $this->user );
 	}
 
 	public function isAuthenticated(){

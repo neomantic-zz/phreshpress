@@ -28,17 +28,13 @@ class Cafepress_Product {
 	private $__domDocument = null;
 	private $__marketUri = '';
 
-	public $user = null;
-	public $appKey = '';
-	public $storeName = '';
+	protected $__store;
 
-	public function __construct( $user, $appKey, $merchandiseId, $storeName ) {
+	public function __construct( $merchandiseId, $store, $user ) {
 		$this->__merchandiseId = $merchandiseId;
 		$this->user = $user;
-		$this->appKey = $appKey;
-		$this->storeName = $storeName;
+		$this->__store = $store;
 		$this->__create();
-
 	}
 
 
@@ -58,7 +54,7 @@ class Cafepress_Product {
 		$url = sprintf( '%sproduct.create.cp?v=%s&appKey=%s&merchandiseId=%s&fieldTypes=writable',
 						Cafepress_Store::API_URL,
 						Cafepress_Store::API_VERSION,
-						$this->appKey,
+						$this->__store->appKey,
 						$this->__merchandiseId
 						);
 
@@ -85,9 +81,7 @@ class Cafepress_Product {
 
 			$positionAttribute = 'FrontCenter';
 
-			if ( !empty( $storeName ) ) {
-				$this->storeName = $storeName;
-			}
+			$storeName = !empty( $storeName ) : $storeName ? $this->__store->name;
 
 			$pathParser = new DOMXPath( $this->__domDocument );
 
@@ -98,14 +92,14 @@ class Cafepress_Product {
 			$nodeList = $pathParser->query( "//@storeId" );
 
 			//add the store name
-			$nodeList->item(0)->value = $this->storeName;
+			$nodeList->item(0)->value = $storeName;
 
 			$curl = curl_init();
 
 			$url = sprintf('%sproduct.save.cp?v=%s&appKey=%s&userToken=%s&value=%s&fieldTypes=readonly',
 						   Cafepress_Store::API_URL,
 						   Cafepress_Store::API_VERSION,
-						   $this->appKey,
+						   $this->__store->appKey,
 						   $this->user->getUserToken(),
 						   urlencode( $this->__domDocument->saveXML() )
 						   );
