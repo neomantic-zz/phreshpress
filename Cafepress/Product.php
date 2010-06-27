@@ -74,15 +74,13 @@ class Cafepress_Product {
 		return false;
 	}
 
-	public function addDesign( $design, $position = 'front' ) {
+	public function addDesignToFront( $design ) {
 
 		if ( $this->__domDocument != null ) {
 
-			$positionAttribute = 'FrontCenter';
-
 			$pathParser = new DOMXPath( $this->__domDocument );
 
-			$nodeList = $pathParser->query( "//mediaConfiguration[@name='" . $positionAttribute . "']" );
+			$nodeList = $pathParser->query( "//mediaConfiguration[@name='FrontCenter']" );
 
 			$nodeList->item(0)->setAttribute( 'designId',  $design->imageId );
 
@@ -119,11 +117,6 @@ class Cafepress_Product {
 
 		return $this->__marketUri;
 
-	}
-
-	public function addDesignToFront( $design ) {
-		$this->__create();
-		return $this->addDesign( $design , 'front' );
 	}
 
 	public function getMarketUri() {
