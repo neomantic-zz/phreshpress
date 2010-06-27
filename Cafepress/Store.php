@@ -54,18 +54,6 @@ class Cafepress_Store {
 		return $nodeList->length > 0 ? true : false;
 	}
 
-	public function createUser( $email, $password ) {
-		$this->user = new Cafepress_User( $email, $password );
-		return $this->user;
-	}
-
-	public function createProduct( $merchandiseId ) {
-		if ( !$this->isAuthenticated() ) {
-			return false;
-		}
-
-		return new Cafepress_Product( $merchandiseId, $this );
-	}
 
 	public function isAuthenticated(){
 		if ( $this->user == null ){
@@ -85,6 +73,19 @@ class Cafepress_Store {
 			$this->user->authenticate( $this->appKey );
 		}
 
+	}
+
+	public function createUser( $email, $password ) {
+		$this->user = new Cafepress_User( $email, $password );
+		return $this->user;
+	}
+
+	public function createProduct( $merchandiseId ) {
+		if ( !$this->isAuthenticated() ) {
+			return false;
+		}
+
+		return new Cafepress_Product( $merchandiseId, $this );
 	}
 
 	public function createDesign( $imagePath ){
