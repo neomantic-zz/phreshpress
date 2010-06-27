@@ -95,13 +95,12 @@ class Cafepress_Store {
 		return new Cafepress_Design( $imagePath, $this );
 	}
 
-	public function createProductWithDesign( $merchandiseId, $imagePath, $position = 'front' ) {
+	public function createProductWithFrontDesign( $merchandiseId, $imagePath ) {
 		if ( !$this->isAuthenticated() ) {
 			return false;
 		}
 		$product = $this->createProduct( $merchandiseId );
-		$design = $this->createDesign( $imagePath );
-		$product->addDesignToFront( $design );
+		$product->addDesignToFront( $this->createDesign( $imagePath ) );
 		return $product;
 	}
 
