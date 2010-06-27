@@ -22,70 +22,93 @@ require_once 'Store.php';
 
 class Cafepress_User {
 
-	public $email = '';
-	public $password = '';
-	private $__userToken = '';
+	protected	$__email		= '';
+	protected	$__password		= '';
+	protected   $__store		= null;
+	protected	$__token		= '';
 
-	public function __construct( $email, $password ) {
-		$this->email = $email;
-		$this->password = $password;
+
+	public function __construct( $email, $password, $store = null ) {
+		$this->__email = $email;
+		$this->__password = $password;
+		$this->__store = $store
 	}
 
+	public function setAccountCredentials( $email, $password, $store ) {
+		$this->setEmail( $email );
+		$this->setPassword( $password );
+		$this->setStore( $store );
+	}
 
-	public function setAccountCredentials( $email, $password ) {
-		$this->email = $email;
-		$this->password = $password;
+	public function setEmail( $email ) {
+		if ( $email != $this->__email ) {
+			$this->__email = $email;
+			$this->__revokeToken();
+		}
+	}
+
+	public function setPassword( $password ) {
+		if ( $password != $this->__password ) {
+			$this->__password = $password;
+			$this->__revokeToken();
+		}
+	}
+
+	public function setStore( $store ) {
+		$this->__store = $store;
+		$this->__revokeToken();
+	}
+
+	protected function __revokeToken() {
+		$this->__token = '';
 	}
 
 	public function isAuthenticated() {
-		return !empty($this->__userToken);
+		return !empty( $this->__token );
 	}
 
-	public function authenticate( $appKey, $email = '', $password = '' ) {
+	public function authenticate( $email = '', $password = '', $store = null ) {
 
-		if ( !empty( $email ) ) {
-			$this->email = $email;
+		$this->setAccountCredentials( $email, $password, $store );
+
+		if ( ( $this->__email != '' ) &&
+			 ( $this->__password != '' ) &&
+			 ( $this->__store != null ) ) {
+
+			$url = sprintf( '%sauthentication.getUserToken.cp?v=%s&appKey=%s&email=%s&password=%s',
+							Cafepress_Store::API_URL,
+							Cafepress_Store::API_VERSION,
+							$this->__store->appKey,
+							$this->__email,
+							$this->__password
+							);
+
+			$curl = curl_init();
+
+			curl_setopt( $curl, CURLOPT_URL, $url );
+
+			curl_setopt( $curl, CURLOPT_RETURNTRANSFER, 1 );
+
+			$domDocument = Cafepress_Store::getResponse( $curl );
+
+			curl_close( $curl );
+
+			if ( !Cafepress_Store::hasError( $domDocument ) ) {
+
+				$pathParser = new DOMXPath( $domDocument );
+
+				$rootContentNode = $pathParser->query('/');
+
+				$this->__token = $rootContentNode->item(0)->textContent;
+
+			}
+
 		}
 
-		if ( !empty( $password ) ) {
-			$this->password = $password;
-		}
-
-
-		$url = sprintf( '%sauthentication.getUserToken.cp?v=%s&appKey=%s&email=%s&password=%s',
-						Cafepress_Store::API_URL,
-						Cafepress_Store::API_VERSION,
-						$appKey,
-						$this->email,
-						$this->password
-						);
-
-		$curl = curl_init();
-
-		curl_setopt( $curl, CURLOPT_URL, $url );
-
-		curl_setopt( $curl, CURLOPT_RETURNTRANSFER, 1 );
-
-		$domDocument = Cafepress_Store::getResponse( $curl );
-
-		curl_close( $curl );
-
-		if ( !Cafepress_Store::hasError( $domDocument ) ) {
-
-			$pathParser = new DOMXPath( $domDocument );
-
-			$rootContentNode = $pathParser->query('/');
-
-			$this->__userToken = $rootContentNode->item(0)->textContent;
-
-		}
-
-		return $this->__userToken;
-
+		return $this->getUserToken();
 	}
 
 	public function getUserToken(){
-		return $this->__userToken;
+		return $this->__token;
 	}
-
 }

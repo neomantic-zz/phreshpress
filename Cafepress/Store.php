@@ -61,9 +61,9 @@ class Cafepress_Store {
 
 	public function authenticate( $email = '', $password = '' ) {
 		if ( !empty( $email) && !empty( $password) ) {
-			$this->user = $this->createUser( $email, $password );
+			$this->user = $this->createUser( $email, $password, $this );
 		} elseif ( !$this->user->isAuthenticated() ) {
-			$this->user->authenticate( $this->appKey );
+			$this->user->authenticate();
 		}
 	}
 
