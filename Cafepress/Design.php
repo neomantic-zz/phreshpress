@@ -27,23 +27,22 @@ class Cafepress_Design {
 	const DEFAULT_FOLDER = 'Images';
 	const UPLOAD_URL = 'http://upload.cafepress.com/';
 
-	private $__user = null;
+	protected $__store = null;
 
 	public $imagePath = '';
 	public $imageId = '';
 	public $appKey = '';
 
-	public function __construct( $user, $appKey, $imagePath ) {
-		$this->__user = $user;
+	public function __construct( $imagePath, $store ) {
 		$this->imagePath = $imagePath;
-		$this->appKey = $appKey;
+		$this->__store = $store;
 		$this->__create();
 	}
 
 
 	private function __create() {
 
-		if ( $this->__user->isAuthenticated() ) {
+		if ( $this->__store->isAuthenticated() ) {
 
 			$curl = curl_init();
 
@@ -52,11 +51,11 @@ class Cafepress_Design {
 			curl_setopt( $curl, CURLOPT_HEADER, false);
 			curl_setopt( $curl, CURLOPT_POST, 1);
 			curl_setopt( $curl, CURLOPT_POSTFIELDS, array(
-														  'userToken' => $this->__user->getUserToken(),
-														  'appKey' => $this->appKey,
-														  'folder' => self::DEFAULT_FOLDER,
-														  'cpFile1' => '@' . $this->imagePath // wish I understood the need for '@'?
-														  ));
+								      'userToken' => $this->__store->user->getUserToken(),
+								      'appKey' => $this->__store->appKey,
+								      'folder' => self::DEFAULT_FOLDER,
+								      'cpFile1' => '@' . $this->imagePath // wish I understood the need for '@'?
+								      ));
 
 			$domDocument = Cafepress_Store::getResponse( $curl );
 

@@ -91,7 +91,7 @@ class Cafepress_Store {
 		if ( !$this->isAuthenticated() ) {
 			return false;
 		}
-		return new Cafepress_Design( $this->user, $this->appKey, $imagePath );
+		return new Cafepress_Design( $imagePath, $this );
 	}
 
 	public function createProductWithDesign( $merchandiseId, $imagePath, $position = 'front' ) {
