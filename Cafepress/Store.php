@@ -56,11 +56,7 @@ class Cafepress_Store {
 
 
 	public function isAuthenticated(){
-		if ( $this->user == null ){
-			return false;
-		}
-
-		return $this->user->isAuthenticated();
+		return ( $this->user == null ) ? false : $this->user->isAuthenticated();
 	}
 
 	public function authenticate( $email = '', $password = '' ) {
