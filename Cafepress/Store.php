@@ -64,15 +64,11 @@ class Cafepress_Store {
 	}
 
 	public function authenticate( $email = '', $password = '' ) {
-
 		if ( !empty( $email) && !empty( $password) ) {
 			$this->user = $this->createUser( $email, $password );
-		}
-
-		if ( !$this->user->isAuthenticated() ) {
+		} elseif ( !$this->user->isAuthenticated() ) {
 			$this->user->authenticate( $this->appKey );
 		}
-
 	}
 
 	public function createUser( $email, $password ) {
@@ -103,6 +99,5 @@ class Cafepress_Store {
 		$product->addDesignToFront( $this->createDesign( $imagePath ) );
 		return $product;
 	}
-
 }
 
