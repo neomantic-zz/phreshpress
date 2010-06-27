@@ -74,13 +74,11 @@ class Cafepress_Product {
 		return false;
 	}
 
-	public function addDesign( $design, $position = 'front', $storeName = '' ) {
+	public function addDesign( $design, $position = 'front' ) {
 
 		if ( $this->__domDocument != null ) {
 
 			$positionAttribute = 'FrontCenter';
-
-			$storeName = !empty( $storeName ) : $storeName ? $this->__store->name;
 
 			$pathParser = new DOMXPath( $this->__domDocument );
 
@@ -91,7 +89,7 @@ class Cafepress_Product {
 			$nodeList = $pathParser->query( "//@storeId" );
 
 			//add the store name
-			$nodeList->item(0)->value = $storeName;
+			$nodeList->item(0)->value = $this->__store->name;
 
 			$curl = curl_init();
 
