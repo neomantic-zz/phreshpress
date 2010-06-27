@@ -75,32 +75,16 @@ class Cafepress_User {
 			 ( $this->__password != '' ) &&
 			 ( $this->__store != null ) ) {
 
-			$url = sprintf( '%sauthentication.getUserToken.cp?v=%s&appKey=%s&email=%s&password=%s',
-							Cafepress_Store::API_URL,
-							Cafepress_Store::API_VERSION,
-							$this->__store->appKey,
-							$this->__email,
-							$this->__password
-							);
+			$request = new Cafepress_UserRequest(
+										$this->__email,
+										$this->__password,
+										$this->__store->appKey
+										 );
 
-			$curl = curl_init();
+			$response = $request->response();
 
-			curl_setopt( $curl, CURLOPT_URL, $url );
-
-			curl_setopt( $curl, CURLOPT_RETURNTRANSFER, 1 );
-
-			$domDocument = Cafepress_Store::getResponse( $curl );
-
-			curl_close( $curl );
-
-			if ( !Cafepress_Store::hasError( $domDocument ) ) {
-
-				$pathParser = new DOMXPath( $domDocument );
-
-				$rootContentNode = $pathParser->query('/');
-
-				$this->__token = $rootContentNode->item(0)->textContent;
-
+			if ( !$response->hasError() ) {
+				$this->__token = $response->queryToken();
 			}
 
 		}

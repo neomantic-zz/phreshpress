@@ -37,24 +37,6 @@ class Cafepress_Store {
 		$this->user = $user;
 	}
 
-
-	public static function getResponse( $curl ) {
-		$doc = new DOMDocument;
-		$response = curl_exec( $curl );
-		$doc->loadXML( $response );
-		return $doc;
-	}
-
-	public static function hasError( $domDocument ) {
-
-		$pathParser = new DOMXPath( $domDocument );
-
-		$nodeList = $pathParser->query('//exception-message');
-
-		return $nodeList->length > 0 ? true : false;
-	}
-
-
 	public function isAuthenticated(){
 		return ( $this->user == null ) ? false : $this->user->isAuthenticated();
 	}
