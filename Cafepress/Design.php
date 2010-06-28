@@ -21,55 +21,48 @@
 require_once 'Store.php';
 require_once 'Product.php';
 require_once 'User.php';
+require_once 'DesignRequest.php';
+
 
 class Cafepress_Design {
 
-	const DEFAULT_FOLDER = 'Images';
-	const UPLOAD_URL = 'http://upload.cafepress.com/';
+	protected $__store;
 
-	protected $__store = null;
+	protected $__imagePath = '';
 
-	public $imagePath = '';
-	public $imageId = '';
-	public $appKey = '';
+	protected $__imageId = '';
 
 	public function __construct( $imagePath, $store ) {
-		$this->imagePath = $imagePath;
+		$this->__imagePath = $imagePath;
 		$this->__store = $store;
-		$this->__create();
+		$this->create();
 	}
 
+	public function setImagePath( $imagePath ) {
+		$this->__imagePath = $imagePath;
+		$this->create();
+	}
 
-	private function __create() {
+	public function getImageId() {
+		return $this->__imageId;
+	}
+
+	public function create( $imagePath = '', $store = null ) {
 
 		if ( $this->__store->isAuthenticated() ) {
 
-			$curl = curl_init();
+			$imagePath = !empty( $imagePath ) ? $imagePath : $this->__imagePath;
 
-			curl_setopt( $curl, CURLOPT_URL, self::UPLOAD_URL . 'image.upload.cp' );
-			curl_setopt( $curl, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt( $curl, CURLOPT_HEADER, false);
-			curl_setopt( $curl, CURLOPT_POST, 1);
-			curl_setopt( $curl, CURLOPT_POSTFIELDS, array(
-								      'userToken' => $this->__store->user->getUserToken(),
-								      'appKey' => $this->__store->appKey,
-								      'folder' => self::DEFAULT_FOLDER,
-								      'cpFile1' => '@' . $this->imagePath // wish I understood the need for '@'?
-								      ));
+			$store = $store != null ? $store : $this->__store;
 
-			$domDocument = Cafepress_Store::getResponse( $curl );
+			$request = new Cafepress_DesignRequest( $imagePath, $store );
 
-			curl_close( $curl );
-
-			if ( !Cafepress_Store::hasError( $domDocument ) ){
-
-				$pathParser = new DOMXPath( $domDocument );
-
-				$rootContentNode = $pathParser->query('//value');
-
-				$this->imageId = $rootContentNode->item(0)->nodeValue; //would have multiple items, if we are uploading, multiple Images
+			if ( $request->isSuccessful() ) {
+				$this->__imageId = $request->response()->queryImageId();
+				return true;
 			}
-
 		}
+
+		return false;
 	}
 }

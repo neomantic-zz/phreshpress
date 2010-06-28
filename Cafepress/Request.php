@@ -22,10 +22,15 @@ class Cafepress_Request {
 	}
 
 
-	public function post() {
+	public function post( $postFields = array() ) {
 
-		curl_setopt( $this->__curl, CURLOPT_HEADER, false);
+		curl_setopt( $this->__curl, CURLOPT_HEADER, false );
+
 		curl_setopt( $this->__curl, CURLOPT_POST, 1);
+
+		if ( !empty( $postFields ) ) {
+			curl_setopt( $this->__curl, CURLOPT_POSTFIELDS, $postFields );
+		}
 
 		return $this->__execute();
 
