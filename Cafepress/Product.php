@@ -21,19 +21,18 @@
 require_once 'Store.php';
 require_once 'Design.php';
 require_once 'User.php';
+require_once 'ProductRequest.php';
 
 class Cafepress_Product {
 
 	private $__merchandiseId = '';
-	private $__domDocument = null;
-	private $__marketUri = '';
 
 	protected $__store;
 
 	public function __construct( $merchandiseId, $store ) {
 		$this->__merchandiseId = $merchandiseId;
 		$this->__store = $store;
-		$this->__create();
+		$this->create();
 	}
 
 
@@ -43,32 +42,20 @@ class Cafepress_Product {
 
 	public function setMerchandiseId( $merchandiseId ){
 		$this->__merchandiseId = $merchandiseId;
-		if ( $this->__domDocument != null ){
-			$this->__create();
-		}
+		$this->create();
 	}
 
-	private function __create() {
+	public function create( $merchandiseId = '', $store = null ) {
 
-		$url = sprintf( '%sproduct.create.cp?v=%s&appKey=%s&merchandiseId=%s&fieldTypes=writable',
-						Cafepress_Store::API_URL,
-						Cafepress_Store::API_VERSION,
-						$this->__store->appKey,
-						$this->__merchandiseId
-						);
+		if ( $this->__store->isAuthenticated() ) {
 
-		$curl = curl_init();
+			$merchandiseId = !empty( $merchandiseId ) ? $merchandiseId : $this->__merchandiseId;
 
-		curl_setopt( $curl, CURLOPT_URL, $url );
+			$store = ( $store != null ) ? $store : $this->__store;
 
-		curl_setopt( $curl, CURLOPT_RETURNTRANSFER, 1 );
+			$request = new Cafepress_ProductRequest( $merchandiseId, $store );
 
-		$domDocument = Cafepress_Store::getResponse( $curl );
-
-		curl_close( $curl );
-
-		if ( !Cafepress_Store::hasError( $domDocument) ) {
-			$this->__domDocument = $domDocument;
+			return $request->isSuccessful();
 		}
 
 		return false;
@@ -76,52 +63,6 @@ class Cafepress_Product {
 
 	public function addDesignToFront( $design ) {
 
-		if ( $this->__domDocument != null ) {
-
-			$pathParser = new DOMXPath( $this->__domDocument );
-
-			$nodeList = $pathParser->query( "//mediaConfiguration[@name='FrontCenter']" );
-
-			$nodeList->item(0)->setAttribute( 'designId',  $design->imageId );
-
-			$nodeList = $pathParser->query( "//@storeId" );
-
-			//add the store name
-			$nodeList->item(0)->value = $this->__store->name;
-
-			$curl = curl_init();
-
-			$url = sprintf('%sproduct.save.cp?v=%s&appKey=%s&userToken=%s&value=%s&fieldTypes=readonly',
-						   Cafepress_Store::API_URL,
-						   Cafepress_Store::API_VERSION,
-						   $this->__store->appKey,
-						   $this->__store->user->getUserToken(),
-						   urlencode( $this->__domDocument->saveXML() )
-						   );
-
-			curl_setopt( $curl, CURLOPT_URL, $url );
-
-			curl_setopt( $curl, CURLOPT_RETURNTRANSFER, 1 );
-
-			$domDocument = Cafepress_Store::getResponse( $curl );
-
-			curl_close( $curl );
-
-			if ( !Cafepress_Store::hasError( $domDocument ) ){
-				$pathParser = new DOMXPath( $domDocument );
-				$nodeList = $pathParser->query('//@marketplaceUri');
-				$this->__marketUri = $nodeList->item(0)->nodeValue;
-			}
-
-		}
-
-		return $this->__marketUri;
-
 	}
-
-	public function getMarketUri() {
-		return $this->__marketUri;
-	}
-
 
 }
