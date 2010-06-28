@@ -56,7 +56,7 @@ class Cafepress_Request {
 
 
 	public function isSuccessful() {
-		return $this->__response->isSuccessful();
+		return $this->__response->hasError();
 	}
 
 }

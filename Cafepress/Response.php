@@ -28,7 +28,7 @@ class Cafepress_Response {
 		$this->__domDocument = new DOMDocument();
 	}
 
-	public function isSuccessful() {
+	public function hasError() {
 
 		$nodeList = $this->__xPathParser->query('//exception-message');
 
