@@ -43,15 +43,16 @@ class Cafepress_Store {
 
 	public function authenticate( $email = '', $password = '' ) {
 		if ( !empty( $email) && !empty( $password) ) {
-			$this->user = $this->createUser( $email, $password, $this );
-		} elseif ( !$this->user->isAuthenticated() ) {
+			$this->user = $this->createUser( $email, $password );
+		}
+
+		if ( !$this->user->isAuthenticated() ) {
 			$this->user->authenticate();
 		}
 	}
 
 	public function createUser( $email, $password ) {
-		$this->user = new Cafepress_User( $email, $password );
-		return $this->user;
+		return new Cafepress_User( $email, $password, $this );
 	}
 
 	public function createProduct( $merchandiseId ) {

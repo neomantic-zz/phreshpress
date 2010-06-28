@@ -2,50 +2,63 @@
 
 class Cafepress_Request {
 
-	private $__xmlResponse = '';
+	protected	$__url;
+	protected	$__curl = null;
 
-	protected $__url;
+	private		$__response = null;
 
-	public function __construct( $url ) {
+	public function __construct( $url, $response ) {
+
 		$this->__url = $url;
+
+		$this->__response = $response;
+
+		$this->__curl = curl_init( $this->__url );
+
+		curl_setopt( $this->__curl, CURLOPT_RETURNTRANSFER, 1 );
+
 	}
 
 	public function get() {
-
-		$curl = curl_init();
-
-		curl_setopt( $curl, CURLOPT_URL, $this->__url );
-
-		curl_setopt( $curl, CURLOPT_RETURNTRANSFER, 1 );
-
-		$response = curl_exec( $curl );
-
-		$this->__xmlResponse = $response;
-
-		return $this->__xmlResponse;
+		return $this->__execute();
 	}
-
 
 
 	public function post() {
 
+		curl_setopt( $this->__curl, CURLOPT_HEADER, false);
+		curl_setopt( $this->__curl, CURLOPT_POST, 1);
+
+		return $this->__execute();
+
 	}
 
-	public response() {
-		return $this->__xmlResponse;
+	public function response() {
+		return $this->__response;
 	}
 
-	public function hasError() {
+	protected function __execute() {
 
-		$domDocument = new DOMDocument;
+		$curlResponse = curl_exec( $this->__curl );
 
-		$domDocument->loadXML( $this->__xmlResponse );
+		curl_close( $this->__curl );
 
-		$pathParser = new DOMXPath( $domDocument );
+		$this->__curl = null;
 
-		$nodeList = $pathParser->query('//exception-message');
+		if ( $curlResponse !== false ) {
 
-		return $nodeList->length > 0;
+			$this->__response->loadXML( $curlResponse );
+
+			return $this->isSuccessful();
+
+		}
+
+		return false;
+	}
+
+
+	public function isSuccessful() {
+		return $this->__response->isSuccessful();
 	}
 
 }

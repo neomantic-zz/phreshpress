@@ -19,6 +19,7 @@
 **/
 
 require_once 'Store.php';
+require_once 'UserRequest.php';
 
 class Cafepress_User {
 
@@ -31,32 +32,36 @@ class Cafepress_User {
 	public function __construct( $email, $password, $store = null ) {
 		$this->__email = $email;
 		$this->__password = $password;
-		$this->__store = $store
+		$this->__store = $store;
+
 	}
 
 	public function setAccountCredentials( $email, $password, $store ) {
+
 		$this->setEmail( $email );
 		$this->setPassword( $password );
 		$this->setStore( $store );
 	}
 
 	public function setEmail( $email ) {
-		if ( $email != $this->__email ) {
+		if ( !empty( $email ) && ( $email != $this->__email ) ) {
 			$this->__email = $email;
 			$this->__revokeToken();
 		}
 	}
 
 	public function setPassword( $password ) {
-		if ( $password != $this->__password ) {
+		if ( !empty( $password ) && ( $password != $this->__password ) ) {
 			$this->__password = $password;
 			$this->__revokeToken();
 		}
 	}
 
 	public function setStore( $store ) {
-		$this->__store = $store;
-		$this->__revokeToken();
+		if ( $store != null ) {
+			$this->__store = $store;
+			$this->__revokeToken();
+		}
 	}
 
 	protected function __revokeToken() {
@@ -78,18 +83,16 @@ class Cafepress_User {
 			$request = new Cafepress_UserRequest(
 										$this->__email,
 										$this->__password,
-										$this->__store->appKey
+										$this->__store
 										 );
 
-			$response = $request->response();
-
-			if ( !$response->hasError() ) {
-				$this->__token = $response->queryToken();
+			if ( $request->isSuccessful() ) {
+				$this->__token = $request->response()->queryToken();
+				return true;
 			}
-
 		}
 
-		return $this->getUserToken();
+		return false;
 	}
 
 	public function getUserToken(){

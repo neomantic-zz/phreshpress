@@ -18,18 +18,25 @@
 *
 **/
 
-class Response {
+class Cafepress_Response {
 
 	protected $__domDocument;
+
 	protected $__xPathParser;
 
-	public function __construct( $xmlResponse ) {
-
+	public function __construct() {
 		$this->__domDocument = new DOMDocument();
-
-		$this->__domDocument->loadXML( $xmlResponse );
-
-		$this->__xPathParser = new DOMXPath( $this->__domResponse );
 	}
 
+	public function isSuccessful() {
+
+		$nodeList = $this->__xPathParser->query('//exception-message');
+
+		return $nodeList->length === 0;
+	}
+
+	public function loadXML( $xml ) {
+		$this->__domDocument->loadXML( $xml );
+		$this->__xPathParser = new DOMXPath( $this->__domDocument );
+	}
 }
