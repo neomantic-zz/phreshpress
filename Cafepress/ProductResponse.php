@@ -26,12 +26,12 @@ class Cafepress_ProductResponse extends Cafepress_Response {
 		$this->queryPosition('FrontCenter');
 	}
 
-	public function queryBack() {
+	public function queryBackCenter() {
 		$this->queryPosition( 'BackCenter');
 	}
 
 	public function queryPosition( $position ) {
-		return $this->__xPathParser->query( $pathParser->query( "//mediaConfiguration[@name='" . $position . "']" ));
+		return $this->__xPathParserx->query( "//mediaConfiguration[@name='" . $position . "']" );
 	}
 
 	public function queryStoreId() {
