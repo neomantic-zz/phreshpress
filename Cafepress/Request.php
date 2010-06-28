@@ -2,18 +2,16 @@
 
 class Cafepress_Request {
 
-	protected	$__url;
 	protected	$__curl = null;
 
 	private		$__response = null;
 
 	public function __construct( $url, $response ) {
 
-		$this->__url = $url;
 
 		$this->__response = $response;
 
-		$this->__curl = curl_init( $this->__url );
+		$this->__curl = curl_init( $url );
 
 		curl_setopt( $this->__curl, CURLOPT_RETURNTRANSFER, 1 );
 
