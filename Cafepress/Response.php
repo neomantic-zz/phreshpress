@@ -29,6 +29,8 @@ class Cafepress_Response {
 	}
 
 	public function hasError() {
+		//TODO - make this more robust, checking for error elements,
+		// and help elements as well
 
 		$nodeList = $this->__xPathParser->query('//exception-message');
 
