@@ -103,5 +103,9 @@ class Cafepress_Store {
 		return false;
 	}
 
+	public function createProductWithFrontDesign( $merchandiseId, $imgPath ) {
+		return $this->createProductWithDesign( $merchandiseId, $imgPath );
+	}
+
 }
 
