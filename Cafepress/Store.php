@@ -21,6 +21,7 @@
 require_once 'Design.php';
 require_once 'Product.php';
 require_once 'User.php';
+require_once 'Designer.php';
 
 class Cafepress_Store {
 
@@ -70,13 +71,32 @@ class Cafepress_Store {
 		return new Cafepress_Design( $imagePath, $this );
 	}
 
-	public function createProductWithFrontDesign( $merchandiseId, $imagePath ) {
+	public function createProductWithDesign( $merchandiseId, $imagePath, $positions = array( Cafepress_Product::FRONT_CENTER ) ) {
 		if ( !$this->isAuthenticated() ) {
 			return false;
 		}
+
 		$product = $this->createProduct( $merchandiseId );
-		$product->addDesignToFront( $this->createDesign( $imagePath ) );
-		return $product;
+
+		$design = $this->createDesign( $imagePath );
+
+		if ( $product && $design ) {
+
+			$designer = new Cafepress_Designer( $product, $this );
+
+			$designs = array();
+
+			foreach ( $positions as $position ) {
+				$designs[ $position ] = $design;
+			}
+
+			$designer->addDesigns( $designs );
+
+			return $designer->getProductMarketUri();
+		}
+
+		return false;
 	}
+
 }
 

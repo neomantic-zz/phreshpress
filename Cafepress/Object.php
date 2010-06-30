@@ -1,4 +1,5 @@
 <?php
+
 /******
 * 	Cafepress API PHP
 *    Copyright (C) 2010 Chad Albers <calbers@neomantic.com>
@@ -18,24 +19,12 @@
 *
 **/
 
-require_once "Response.php";
+class Cafepress_Object {
 
-class Cafepress_ProductResponse extends Cafepress_Response {
+	protected $__response = null;
 
-	public function queryFrontCenter() {
-		$this->queryPosition('FrontCenter');
-	}
-
-	public function queryBackCenter() {
-		$this->queryPosition( 'BackCenter');
-	}
-
-	public function queryPosition( $position ) {
-		return $this->__xPathParser->query( "//mediaConfiguration[@name='" . $position . "']" );
-	}
-
-	public function queryStoreId() {
-		return $this->__xPathParser->query( "//@storeId" );
+	public function getResponse() {
+		return $this->__response;
 	}
 
 }

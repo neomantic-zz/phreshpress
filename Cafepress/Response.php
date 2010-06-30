@@ -35,8 +35,13 @@ class Cafepress_Response {
 		return $nodeList->length === 0;
 	}
 
-	public function loadXML( $xml ) {
+	public function getXML() {
+		return $this->__domDocument->saveXML();
+	}
+
+	public function setXML( $xml ) {
 		$this->__domDocument->loadXML( $xml );
 		$this->__xPathParser = new DOMXPath( $this->__domDocument );
 	}
+
 }

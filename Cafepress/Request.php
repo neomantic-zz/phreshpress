@@ -71,7 +71,7 @@ class Cafepress_Request {
 
 		if ( $curlResponse !== false ) {
 
-			$this->__response->loadXML( $curlResponse );
+			$this->__response->setXML( $curlResponse );
 
 			return $this->isSuccessful();
 
