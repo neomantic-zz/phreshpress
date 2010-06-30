@@ -14,6 +14,4 @@ $cp = new Cafepress_Store( $appKey, $storeName);
 
 $cp->authenticate( $email, $password );
 
-$p = $cp->createProductWithFrontDesign( $merchandiseId, $imgPath );
-
-echo $p->getMarketUri();
+echo $cp->createProductWithFrontDesign( $merchandiseId, $imgPath );
