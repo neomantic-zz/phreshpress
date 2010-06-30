@@ -29,7 +29,12 @@ class Cafepress_DesignRequest extends Cafepress_Request {
 
 	public $folder = self::DEFAULT_FOLDER;
 
-	public function __construct( $imagePath, $store,  $folder = '' ) {
+	// TODO Currently, this only supports adding one image, whenthe API
+	// can handle uploading multiple images in one POST request...
+	// to implement it, the response class would have to be alter to
+	// query return multiple image ids
+
+	public function __construct( $imagePath, $store,  $folder = '', $goto = '' ) {
 
 		if ( $store->isAuthenticated() ) {
 
@@ -41,6 +46,11 @@ class Cafepress_DesignRequest extends Cafepress_Request {
 								'folder' => $folder,
 								'cpFile1' => '@' . $imagePath // wish I understood the need for '@'?
 								);
+
+			if ( !empty( $goto )  ) {
+				$postFields['goto'] = $goto;
+
+			}
 
 			parent::__construct( self::UPLOAD_URL . 'image.upload.cp',
 								 new Cafepress_DesignResponse() );
