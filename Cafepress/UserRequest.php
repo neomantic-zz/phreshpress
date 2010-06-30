@@ -28,11 +28,11 @@ class Cafepress_UserRequest extends Cafepress_Request {
 	public function __construct( $email, $password, $store ) {
 
 		$url = sprintf( '%sauthentication.getUserToken.cp?v=%s&appKey=%s&email=%s&password=%s',
-								Cafepress_Request::API_URL,
-								Cafepress_Request::API_VERSION,
-								$store->appKey,
-								$email,
-								$password
+						Cafepress_Request::API_URL,
+						Cafepress_Request::API_VERSION,
+						$store->getAppKey(),
+						$email,
+						$password
 						);
 
 		parent::__construct( $url, new Cafepress_UserResponse() );

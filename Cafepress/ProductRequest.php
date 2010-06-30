@@ -31,7 +31,7 @@ class Cafepress_ProductRequest extends Cafepress_Request {
 			$url = sprintf( '%sproduct.create.cp?v=%s&appKey=%s&merchandiseId=%s&fieldTypes=writable',
 							Cafepress_Request::API_URL,
 							Cafepress_Request::API_VERSION,
-							$store->appKey,
+							$store->getAppKey(),
 							$merchandiseId
 							);
 

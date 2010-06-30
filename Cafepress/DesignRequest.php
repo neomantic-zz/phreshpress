@@ -36,8 +36,8 @@ class Cafepress_DesignRequest extends Cafepress_Request {
 			$folder = !empty( $folder ) ? $folder : $this->folder;
 
 			$postFields = array(
-								'userToken' => $store->user->getUserToken(),
-								'appKey' => $store->appKey,
+								'userToken' => $store->getUser()->getUserToken(),
+								'appKey' => $store->getAppKey(),
 								'folder' => $folder,
 								'cpFile1' => '@' . $imagePath // wish I understood the need for '@'?
 								);

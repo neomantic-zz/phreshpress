@@ -26,27 +26,35 @@ require_once 'Designer.php';
 class Cafepress_Store {
 
 	public $name = '';
-	public $appKey = '';
-	public $user = null;
+	public $__appKey = '';
+	public $__user = null;
 
 	public function __construct( $appKey, $name, $user = null ) {
-		$this->appKey = $appKey;
+		$this->__appKey = $appKey;
 		$this->name = $name;
-		$this->user = $user;
+		$this->__user = $user;
 	}
 
 	public function isAuthenticated(){
-		return ( $this->user == null ) ? false : $this->user->isAuthenticated();
+		return ( $this->__user == null ) ? false : $this->__user->isAuthenticated();
 	}
 
 	public function authenticate( $email = '', $password = '' ) {
 		if ( !empty( $email) && !empty( $password) ) {
-			$this->user = $this->createUser( $email, $password );
+			$this->__user = $this->createUser( $email, $password );
 		}
 
-		if ( !$this->user->isAuthenticated() ) {
-			$this->user->authenticate();
+		if ( !$this->__user->isAuthenticated() ) {
+			$this->__user->authenticate();
 		}
+	}
+
+	public function getUser() {
+		return $this->__user;
+	}
+
+	public function getAppKey() {
+		return $this->__appKey;
 	}
 
 	public function createUser( $email, $password ) {

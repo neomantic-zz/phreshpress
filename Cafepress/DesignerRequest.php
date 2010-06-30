@@ -48,8 +48,8 @@ class Cafepress_DesignerRequest extends Cafepress_Request {
 						   Cafepress_Request::API_VERSION );
 
 			$postFields = array(
-								'userToken' => $store->user->getUserToken(),
-								'appKey' => $store->appKey,
+								'userToken' => $store->getUser()->getUserToken(),
+								'appKey' => $store->getAppKey(),
 								'value' => $productResponse->getXML()
 								);
 
