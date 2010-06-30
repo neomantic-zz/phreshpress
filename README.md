@@ -26,18 +26,18 @@ new additions and extensions.
 
 Here is an example:
 
-`$email = 'my@emailaddress.com';`
-`$password = 'mysekritpassword';`
-`$appKey = 'appkeyfromcafepress';`
-`$storeName = 'storename';`
-`$imgPath = '/image.png';`
-`$merchandiseId = '2';`
+`$email = 'my@emailaddress.com';
+$password = 'mysekritpassword';
+$appKey = 'appkeyfromcafepress';
+$storeName = 'storename';
+$imgPath = '/image.png';
+$merchandiseId = '2';
 
-`$cp = new Cafepress_Store( $appKey, $storeName);`
-`$cp->authenticate( $email, $password );`
+$cp = new Cafepress_Store( $appKey, $storeName);
+$cp->authenticate( $email, $password );
 
-`//echo out the marketURI for that product and it's design`
-`echo $cp->createProductWithFrontDesign( $merchandiseId, $imgPath );`
+//echo out the marketURI for that product and it's design
+echo $cp->createProductWithFrontDesign( $merchandiseId, $imgPath );`
 
 
 # License
