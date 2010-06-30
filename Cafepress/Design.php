@@ -18,23 +18,22 @@
 *
 **/
 
+require_once 'StoreObject.php';
 require_once 'Store.php';
 require_once 'Product.php';
 require_once 'User.php';
 require_once 'DesignRequest.php';
 
 
-class Cafepress_Design {
-
-	protected $__store;
+class Cafepress_Design extends Cafepress_StoreObject {
 
 	protected $__imagePath = '';
 
-	protected $__imageId = '';
-
 	public function __construct( $imagePath, $store ) {
 		$this->__imagePath = $imagePath;
-		$this->__store = $store;
+
+		parent::__construct( $store );
+
 		$this->create();
 	}
 
@@ -44,7 +43,7 @@ class Cafepress_Design {
 	}
 
 	public function getImageId() {
-		return $this->__imageId;
+		return $this->__response->queryImageId();
 	}
 
 	public function create( $imagePath = '', $store = null ) {
@@ -58,7 +57,7 @@ class Cafepress_Design {
 			$request = new Cafepress_DesignRequest( $imagePath, $store );
 
 			if ( $request->isSuccessful() ) {
-				$this->__imageId = $request->response()->queryImageId();
+				$this->__response = $request->getResponse();
 				return true;
 			}
 		}

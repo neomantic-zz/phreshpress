@@ -26,8 +26,6 @@ class Cafepress_Request {
 
 	public function __construct( $url, $response ) {
 
-		error_log( $url );
-
 		$this->__response = $response;
 
 		$this->__curl = curl_init( $url );
@@ -55,7 +53,7 @@ class Cafepress_Request {
 
 	}
 
-	public function response() {
+	public function getResponse() {
 		return $this->__response;
 	}
 
@@ -63,11 +61,7 @@ class Cafepress_Request {
 
 		$curlResponse = curl_exec( $this->__curl );
 
-		curl_close( $this->__curl );
-
 		$this->__curl = null;
-
-		error_log( $curlResponse );
 
 		if ( $curlResponse !== false ) {
 

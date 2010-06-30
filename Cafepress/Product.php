@@ -18,24 +18,24 @@
 *
 **/
 
-require_once 'Object.php';
+require_once 'StoreObject.php';
 require_once 'Store.php';
 require_once 'Design.php';
 require_once 'User.php';
 require_once 'ProductRequest.php';
 
-class Cafepress_Product extends Cafepress_Object {
+class Cafepress_Product extends Cafepress_StoreObject {
 
 	protected $__merchandiseId = '';
-
-	protected $__store;
 
 	const FRONT_CENTER = 'FrontCenter';
 	const BACK_CENTER = 'BackCenter';
 
 	public function __construct( $merchandiseId, $store ) {
 		$this->__merchandiseId = $merchandiseId;
-		$this->__store = $store;
+
+		parent::__construct( $store );
+
 		$this->create();
 	}
 
@@ -59,7 +59,7 @@ class Cafepress_Product extends Cafepress_Object {
 			$request = new Cafepress_ProductRequest( $merchandiseId, $store );
 
 			if ( $request->isSuccessful() ) {
-				$this->__response = $request->response();
+				$this->__response = $request->getResponse();
 				return true;
 			}
 		}

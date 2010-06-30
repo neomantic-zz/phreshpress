@@ -19,12 +19,28 @@
 *
 **/
 
-class Cafepress_Object {
+class Cafepress_StoreObject {
 
 	protected $__response = null;
+	protected $__store = null;
+
+	public function __construct( $store ) {
+		$this->__store = $store;
+	}
 
 	public function getResponse() {
 		return $this->__response;
 	}
 
+	public function setStore( $store ) {
+		$this->__store = $store;
+	}
+
+	public function getStore() {
+		return $this->__store;
+	}
+
+	public function hasResponse() {
+		return $this->__response != null;
+	}
 }

@@ -56,7 +56,7 @@ class Cafepress_Store {
 		return new Cafepress_User( $email, $password, $this );
 	}
 
-	public function createProduct( $merchandiseId ) {
+	public function createProduct( $merchandiseId ) {'authenticating' );
 		if ( !$this->isAuthenticated() ) {
 			return false;
 		}

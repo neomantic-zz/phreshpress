@@ -18,22 +18,19 @@
 *
 **/
 
+require_once 'StoreObject.php';
 require_once 'Store.php';
 require_once 'UserRequest.php';
 
-class Cafepress_User {
+class Cafepress_User extends Cafepress_StoreObject {
 
 	protected	$__email		= '';
 	protected	$__password		= '';
-	protected   $__store		= null;
-	protected	$__token		= '';
-
 
 	public function __construct( $email, $password, $store = null ) {
 		$this->__email = $email;
 		$this->__password = $password;
-		$this->__store = $store;
-
+		parent::__construct( $store );
 	}
 
 	public function setAccountCredentials( $email, $password, $store ) {
@@ -58,18 +55,18 @@ class Cafepress_User {
 	}
 
 	public function setStore( $store ) {
-		if ( $store != null ) {
-			$this->__store = $store;
+		if ( $store != null ) { // not optimal, probably should be in parent
+			parent::setStore( $store );
 			$this->__revokeToken();
 		}
 	}
 
 	protected function __revokeToken() {
-		$this->__token = '';
+		$this->__response = null;
 	}
 
 	public function isAuthenticated() {
-		return !empty( $this->__token );
+		return $this->getUserToken() != '';
 	}
 
 	public function authenticate( $email = '', $password = '', $store = null ) {
@@ -80,6 +77,8 @@ class Cafepress_User {
 			 ( $this->__password != '' ) &&
 			 ( $this->__store != null ) ) {
 
+
+
 			$request = new Cafepress_UserRequest(
 										$this->__email,
 										$this->__password,
@@ -87,7 +86,7 @@ class Cafepress_User {
 										 );
 
 			if ( $request->isSuccessful() ) {
-				$this->__token = $request->response()->queryToken();
+				$this->__response = $request->getResponse();
 				return true;
 			}
 		}
@@ -96,6 +95,9 @@ class Cafepress_User {
 	}
 
 	public function getUserToken(){
-		return $this->__token;
+		if ( !$this->hasResponse() ) {
+			return '';
+		}
+		return $this->__response->queryToken();
 	}
 }

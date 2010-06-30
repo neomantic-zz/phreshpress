@@ -18,19 +18,21 @@
 *
 **/
 
+require_once 'StoreObject.php';
 require_once 'Product.php';
 require_once 'DesignerRequest.php';
 
-class Cafepress_Designer {
+class Cafepress_Designer extends Cafepress_StoreObject {
 
 	protected $__product;
 	protected $__designs = array();
-	protected $__store;
 
 
 	public function __construct( $product, $store, $designs = array() ) {
+
 		$this->__product = $product;
-		$this->__store = $store;
+
+		parent::__construct( $store );
 
 		if ( !empty( $designs ) ) {
 			$this->__designs = $designs;
@@ -53,7 +55,7 @@ class Cafepress_Designer {
 														 $this->__store
 														 );
 				if ( $request->isSuccessful() ) {
-					$this->__response = $request->response();
+					$this->__response = $request->getResponse();
 					return true;
 				}
 			}
