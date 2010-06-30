@@ -20,6 +20,11 @@
 
 class Cafepress_Request {
 
+
+	const API_URL = 'http://api.cafepress.com/';
+
+	const API_VERSION = '3';
+
 	protected	$__curl = null;
 
 	private		$__response = null;

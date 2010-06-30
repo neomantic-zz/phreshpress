@@ -44,8 +44,8 @@ class Cafepress_DesignerRequest extends Cafepress_Request {
 			$nodeList->item(0)->value = $store->name;
 
 			$url = sprintf('%sproduct.save.cp?v=%s',
-						   Cafepress_Store::API_URL,
-						   Cafepress_Store::API_VERSION );
+						   Cafepress_Request::API_URL,
+						   Cafepress_Request::API_VERSION );
 
 			$postFields = array(
 								'userToken' => $store->user->getUserToken(),

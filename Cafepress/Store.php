@@ -25,9 +25,6 @@ require_once 'Designer.php';
 
 class Cafepress_Store {
 
-	const API_URL = 'http://api.cafepress.com/';
-	const API_VERSION = '3';
-
 	public $name = '';
 	public $appKey = '';
 	public $user = null;
@@ -56,7 +53,7 @@ class Cafepress_Store {
 		return new Cafepress_User( $email, $password, $this );
 	}
 
-	public function createProduct( $merchandiseId ) {'authenticating' );
+	public function createProduct( $merchandiseId ) {;
 		if ( !$this->isAuthenticated() ) {
 			return false;
 		}
